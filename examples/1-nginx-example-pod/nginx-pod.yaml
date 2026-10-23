@@ -1,5 +1,5 @@
 # The most basic thing that can work: ONE bare Pod running nginx, exposed at
-# https://pod.heni.sapi.click
+# https://henipod.sapi.click
 #
 # A bare Pod is NOT managed by any controller.  If it crashes, or the node it
 # runs on reboots, it is simply gone and nothing recreates it.  That is why the

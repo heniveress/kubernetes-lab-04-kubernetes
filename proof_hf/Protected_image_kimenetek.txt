@@ -1,0 +1,72 @@
+vheni@LAPTOP-K1KG5JF2:~/work/k8s/kubernetes-lab-04-kubernetes$ curl -s https://protectedheni.sapi.click/
+Hello there!
+
+vheni@LAPTOP-K1KG5JF2:~/work/k8s/kubernetes-lab-04-kubernetes$ kubectl get secret dockerhub-pull
+NAME             TYPE                             DATA   AGE
+dockerhub-pull   kubernetes.io/dockerconfigjson   1      11h
+
+vheni@LAPTOP-K1KG5JF2:~/work/k8s/kubernetes-lab-04-kubernetes$ kubectl describe pod -l app=protected-image
+Name:             protected-image-595ddb7f78-92jqj
+Namespace:        heni
+Priority:         0
+Service Account:  default
+Node:             sapi-worker1/159.69.29.232
+Start Time:       Fri, 23 Oct 2026 14:11:52 +0300
+Labels:           app=protected-image
+                  pod-template-hash=595ddb7f78
+Annotations:      <none>
+Status:           Running
+SeccompProfile:   RuntimeDefault
+IP:               10.42.1.181
+IPs:
+  IP:           10.42.1.181
+Controlled By:  ReplicaSet/protected-image-595ddb7f78
+Containers:
+  app:
+    Container ID:   containerd://071b9019e23b7e60ae153f07464f82dfb447b8fa92a52ce0841757e9e33cd504
+    Image:          heniveress/kuberneteslab04:bun
+    Image ID:       docker.io/heniveress/kuberneteslab04@sha256:610b2105f96753c3b308e8e2b1e25b0edf8e101d2b0159d190fc8a4e60809ec7
+    Port:           3000/TCP (http)
+    Host Port:      0/TCP (http)
+    State:          Running
+      Started:      Fri, 23 Oct 2026 14:11:57 +0300
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     250m
+      memory:  256Mi
+    Requests:
+      cpu:      25m
+      memory:   64Mi
+    Liveness:   http-get http://:http/healthz delay=15s timeout=1s period=30s successThreshold=1 failureThreshold=3
+    Readiness:  http-get http://:http/healthz delay=3s timeout=1s period=10s successThreshold=1 failureThreshold=3
+    Environment:
+      PORT:  3000
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-bfrwn (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-bfrwn:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  2m22s  default-scheduler  Successfully assigned heni/protected-image-595ddb7f78-92jqj to sapi-worker1
+  Normal  Pulling    2m22s  kubelet            spec.containers{app}: Pulling image "heniveress/kuberneteslab04:bun"
+  Normal  Pulled     2m17s  kubelet            spec.containers{app}: Successfully pulled image "heniveress/kuberneteslab04:bun" in 4.36s (4.36s including waiting). Image size: 58783279 bytes.
+  Normal  Created    2m17s  kubelet            spec.containers{app}: Container created
+  Normal  Started    2m17s  kubelet            spec.containers{app}: Container started

@@ -28,7 +28,7 @@ spec:
         seccompProfile: { type: RuntimeDefault }
       containers:
         - name: app
-          image: heniveress/protected-image:latest
+          image: heniveress/kuberneteslab04:bun
           ports:
             - name: http
               containerPort: 3000
