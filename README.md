@@ -428,6 +428,13 @@ kubectl auth can-i create deployments # am I even allowed?
    or `kubectl describe pod` showing the pull succeeded).
 4. Share the link in this repository.
 
+- App: https://myapp.heni.sapi.click (health: https://myapp.heni.sapi.click/health)
+- nginx pod: https://henipod.sapi.click
+- nginx deployment: https://deployheni.sapi.click
+- Private image: heniveress/kuberneteslab04:coffee-log (Docker Hub, private) https://hub.docker.com/repositories/heniveress
+- App source: https://github.com/heniveress/kubernetes-lab-02-docker-compose
+- Proof (private repo 404, kubectl outputs): `proof/` folder
+
 ---
 
 ## 9. Further reading
