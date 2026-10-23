@@ -1,0 +1,95 @@
+vheni@LAPTOP-K1KG5JF2:~/work/k8s/kubernetes-lab-04-kubernetes$ kubectl get pods
+NAME                               READY   STATUS    RESTARTS   AGE
+coffee-db-785fc8f4d5-2ffls         1/1     Running   0          3m25s
+myapp-648bcf9449-5qqmn             1/1     Running   0          3m25s
+nginx                              1/1     Running   0          11h
+nginx-2wbv5                        1/1     Running   0          11h
+nginx-599579cd-dth4q               1/1     Running   0          11h
+nginx-599579cd-s8d9r               1/1     Running   0          11h
+nginx-q882d                        1/1     Running   0          11h
+protected-image-595ddb7f78-92jqj   1/1     Running   0          42m
+
+vheni@LAPTOP-K1KG5JF2:~/work/k8s/kubernetes-lab-04-kubernetes$ kubectl get secret
+NAME               TYPE                                  DATA   AGE
+coffee-db          Opaque                                3      5m53s
+dockerhub-pull     kubernetes.io/dockerconfigjson        1      11h
+heni-credentials   Opaque                                2      7d2h
+heni-token         kubernetes.io/service-account-token   3      7d2h
+
+vheni@LAPTOP-K1KG5JF2:~/work/k8s/kubernetes-lab-04-kubernetes$ kubectl describe pod -l app=myapp
+Name:             myapp-648bcf9449-5qqmn
+Namespace:        heni
+Priority:         0
+Service Account:  default
+Node:             sapi-worker1/159.69.29.232
+Start Time:       Fri, 23 Oct 2026 14:50:50 +0300
+Labels:           app=myapp
+                  pod-template-hash=648bcf9449
+Annotations:      <none>
+Status:           Running
+IP:               10.42.1.183
+IPs:
+  IP:           10.42.1.183
+Controlled By:  ReplicaSet/myapp-648bcf9449
+Containers:
+  myapp:
+    Container ID:   containerd://dc03ba74534a8861cb2b3d7390161c4276da5abde4403c931281116f165ec0a8
+    Image:          heniveress/kuberneteslab04:coffee-log
+    Image ID:       docker.io/heniveress/kuberneteslab04@sha256:4898961235fb8b9a8ef9ba8b91f4ccb370bb5af6a3837369971948dc149632f7
+    Port:           8080/TCP (http)
+    Host Port:      0/TCP (http)
+    State:          Running
+      Started:      Fri, 23 Oct 2026 14:50:59 +0300
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     1
+      memory:  768Mi
+    Requests:
+      cpu:      100m
+      memory:   384Mi
+    Liveness:   http-get http://:http/health delay=0s timeout=1s period=30s successThreshold=1 failureThreshold=3
+    Readiness:  http-get http://:http/health delay=0s timeout=1s period=10s successThreshold=1 failureThreshold=3
+    Startup:    http-get http://:http/health delay=0s timeout=1s period=5s successThreshold=1 failureThreshold=30
+    Environment:
+      POSTGRES_DB:                    <set to the key 'POSTGRES_DB' in secret 'coffee-db'>  Optional: false
+      SPRING_DATASOURCE_URL:          jdbc:postgresql://coffee-db:5432/$(POSTGRES_DB)
+      SPRING_DATASOURCE_USERNAME:     <set to the key 'POSTGRES_USER' in secret 'coffee-db'>      Optional: false
+      SPRING_DATASOURCE_PASSWORD:     <set to the key 'POSTGRES_PASSWORD' in secret 'coffee-db'>  Optional: false
+      SPRING_JPA_HIBERNATE_DDL_AUTO:  update
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-cjf7c (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-cjf7c:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                   From               Message
+  ----     ------     ----                  ----               -------
+  Normal   Scheduled  3m38s                 default-scheduler  Successfully assigned heni/myapp-648bcf9449-5qqmn to sapi-worker1
+  Normal   Pulling    3m38s                 kubelet            spec.containers{myapp}: Pulling image "heniveress/kuberneteslab04:coffee-log"
+  Normal   Pulled     3m30s                 kubelet            spec.containers{myapp}: Successfully pulled image "heniveress/kuberneteslab04:coffee-log" in 8.097s (8.097s including waiting). Image size: 178620997 bytes.
+  Normal   Created    3m30s                 kubelet            spec.containers{myapp}: Container created
+  Normal   Started    3m30s                 kubelet            spec.containers{myapp}: Container started
+  Warning  Unhealthy  3m8s (x5 over 3m28s)  kubelet            spec.containers{myapp}: Startup probe failed: Get "http://10.42.1.183:8080/health": dial tcp 10.42.1.183:8080: connect: connection refused
+
+vheni@LAPTOP-K1KG5JF2:~/work/k8s/kubernetes-lab-04-kubernetes$ curl -i https://myapp.heni.sapi.click/health
+HTTP/2 200
+content-type: application/json
+date: Fri, 23 Oct 2026 11:54:33 GMT
+
+{"status":"ok"}
